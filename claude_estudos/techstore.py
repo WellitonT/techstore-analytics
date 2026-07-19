@@ -20,11 +20,14 @@ def salvar_catalogo(produtos: list, caminho:str):
         json.dump(lista_catalogo, f, indent=4)
 
 catalogo = [
-    Produto("Notebook", 7500.0),
-    Produto("Mouse", 150.0),
-    Produto("Monitor", 1200.0),
-    Produto("Teclado", 300.0),
-    Produto ("Fone de ouvido", 200.0)
+    Produto("Notebook Acer Nitro", 7500.0),
+    Produto("Mouse Havit", 150.0),
+    Produto("Monitor AOC", 1200.0),
+    Produto("Teclado Redragon", 300.0),
+    Produto ("Headset Havit", 200.0),
+    Produto("Iphone 17 Pro Max", 12500.0),
+    Produto("MacBook Air 15", 21700.0),
+    Produto("Processador Ryzen 9", 4900.0)
 ]
 
 salvar_catalogo(catalogo, "catalogo.json")
@@ -41,7 +44,7 @@ def carregar_catalogo(caminho: str) -> list:
 
         return lista_dados
     except FileNotFoundError:
-        return []       
+        return []
 
 def criar_produto_seguro(nome, valor):
     try:
@@ -100,9 +103,6 @@ def atualizar_catalogo(caminho, nome_produto, novo_valor):
         print("Produto não encontrado no catálogo")
 
     salvar_catalogo(catalogo, caminho)
-
-atualizar_catalogo("catalogo.json", "Mouse", 999.0)
-atualizar_catalogo("catalogo.json", "Teclado", 500.0)
 
 
 
