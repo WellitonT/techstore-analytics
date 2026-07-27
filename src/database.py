@@ -132,6 +132,23 @@ def produto_mais_caro(conexao):
     return cursor.fetchone()
 
 # ============================================================
+# Rankings e análises avançadas
+# ============================================================
+
+def ranking_produtos_por_categoria(conexao):
+    """Retorna produtos com ranking dentro da própria categoria,
+    ordenados por valor (do mais caro pro mais barato). Usa DENSE_RANK
+    para tratar empates de forma consistente."""
+    cursor = conexao.cursor()
+    cursor.execute("""
+        SELECT nome, categoria, valor,
+               DENSE_RANK() OVER (PARTITION BY categoria ORDER BY valor DESC) AS ranking
+        FROM produtos
+        ORDER BY categoria, ranking
+    """)
+    return cursor.fetchall()
+
+# ============================================================
 # Pedidos
 # ============================================================
 
