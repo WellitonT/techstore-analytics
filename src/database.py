@@ -106,6 +106,15 @@ def estatisticas_por_categoria(conexao):
     """)
     return cursor.fetchall()
 
+def produto_mais_caro(conexao):
+    """Retorna (nome, valor) do produto com maior valor no catálogo,
+    usando subquery para calcular o máximo dinamicamente."""
+    cursor = conexao.cursor()
+    cursor.execute("""
+        SELECT nome, valor FROM produtos
+        WHERE valor = (SELECT MAX(valor) FROM produtos)
+    """)
+    return cursor.fetchone()
 
 # ============================================================
 # Pedidos
