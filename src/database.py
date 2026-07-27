@@ -106,6 +106,21 @@ def estatisticas_por_categoria(conexao):
     """)
     return cursor.fetchall()
 
+def categorias_com_multiplos_produtos(conexao):
+    """Retorna categorias que possuem mais de um produto cadastrado,
+    usando CTE para agregar antes de filtrar."""
+    cursor = conexao.cursor()
+    cursor.execute("""
+        WITH contagem_por_categoria AS (
+            SELECT categoria, COUNT(*) AS quantidade
+            FROM produtos
+            GROUP BY categoria
+        )
+        SELECT categoria, quantidade FROM contagem_por_categoria
+        WHERE quantidade > 1
+    """)
+    return cursor.fetchall()
+
 def produto_mais_caro(conexao):
     """Retorna (nome, valor) do produto com maior valor no catálogo,
     usando subquery para calcular o máximo dinamicamente."""
