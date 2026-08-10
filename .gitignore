@@ -1,2 +1,24 @@
-﻿.vscode/
+﻿# Banco de dados local (gerado pelo programa)
+data/techstore.db
+
+# Dados/artefatos gerados em execução
+data/catalogo.csv
+data/log_operacoes.txt
+
+# Python
 __pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+
+# Ambiente / segredos
+.env
+
+# Editor
+.vscode/
+.idea/
+
+# Sistema
+.DS_Store

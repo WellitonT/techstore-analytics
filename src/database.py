@@ -1,5 +1,6 @@
 import sqlite3
 from src.json_storage import carregar_catalogo
+from src.logger import registrar_log
 
 
 # ============================================================
@@ -66,6 +67,10 @@ def atualizar_valor_sql(conexao, nome_produto, novo_valor):
     """, (novo_valor, nome_produto))
     conexao.commit()
     print(f"Linhas afetadas: {cursor.rowcount}")
+    if cursor.rowcount > 0:
+        registrar_log(f"Produto '{nome_produto}' atualizado para R${novo_valor}")
+    else:
+        registrar_log(f"Tentativa de atualizar '{nome_produto}' falhou — produto não encontrado")
 
 
 def remover_produto_sql(conexao, nome_produto):
@@ -77,6 +82,7 @@ def remover_produto_sql(conexao, nome_produto):
     """, (nome_produto,))
     conexao.commit()
     print(f"Linhas removidas: {cursor.rowcount}")
+    registrar_log(f"Produto '{nome_produto}' removido")
 
 
 # ============================================================
