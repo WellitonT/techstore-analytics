@@ -1,3 +1,4 @@
+# %%
 import sqlite3
 from src.database import criar_tabela, migrar_catalogo_json_para_sql, atualizar_valor_sql, remover_produto_sql, categorias_com_multiplos_produtos, ranking_produtos_por_categoria
 # teste_csv.py, na RAIZ do projeto, não dentro de src/
@@ -14,6 +15,6 @@ conexao = sqlite3.connect("data/techstore.db")
 #produtos_csv = carregar_catalogo_csv("data/catalogo.csv")
 #for p in produtos_csv:
 #    print(p.nome, p.valor)
-atualizar_valor_sql(conexao, "Iphone 15 Pro Max", 13800.0)
+atualizar_valor_sql(conexao, "Iphone 17 Pro Max", 15900.0)
 
 conexao.close()

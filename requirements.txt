@@ -1,0 +1,9 @@
+# techstore-analytics
+#
+# Nenhuma dependência externa até o momento — o projeto usa apenas
+# a biblioteca padrão do Python (dataclasses, datetime, uuid, csv,
+# json, sqlite3, logging).
+#
+# Este arquivo será populado conforme novas bibliotecas forem
+# adicionadas nas próximas fases do projeto (ex.: pandas, requests,
+# pytest).
