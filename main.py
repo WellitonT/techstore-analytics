@@ -2,8 +2,8 @@
 import sqlite3
 from src.database import criar_tabela, migrar_catalogo_json_para_sql, atualizar_valor_sql, remover_produto_sql, categorias_com_multiplos_produtos, ranking_produtos_por_categoria
 # teste_csv.py, na RAIZ do projeto, não dentro de src/
-from src.csv_storage import salvar_catalogo_csv, carregar_catalogo_csv
-from src.json_storage import carregar_catalogo
+from src.csv_storage import CsvStorage
+from src.json_storage import JsonStorage
 
 conexao = sqlite3.connect("data/techstore.db")
 #resultado = ranking_produtos_por_categoria(conexao)

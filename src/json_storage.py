@@ -1,29 +1,31 @@
 import json
 from src.models import Produto
+from src.storage_interface import StorageInterface
+from src.exceptions import ValorInvalidoError
 
-def salvar_catalogo(produtos: list, caminho: str):
-    lista_catalogo = []
-    for produto in produtos:
-        lista_catalogo.append({"nome": produto.nome, "valor": produto.valor})
-    with open(caminho, "w") as f:
-        json.dump(lista_catalogo, f, indent=4)
+class JsonStorage(StorageInterface):
+    def salvar(self, produtos: list) -> None:
+        lista_catalogo = []
+        for produto in produtos:
+            lista_catalogo.append({"nome": produto.nome, "valor": produto.valor})
+        with open(self.caminho, "w") as f:
+            json.dump(lista_catalogo, f, indent=4)
 
-def carregar_catalogo(caminho: str) -> list:
-    try:
-        with open(caminho) as f:
-            dados = json.load(f)
-        lista_dados = []
-        for dado in dados:
-            lista_dados.append(Produto(dado["nome"], dado["valor"]))
-        return lista_dados
-    except FileNotFoundError:
-        return []
-
+    def carregar(self) -> list:
+        try:
+            with open(self.caminho) as f:
+                dados = json.load(f)
+            lista_dados = []
+            for dado in dados:
+                lista_dados.append(Produto(dado["nome"], dado["valor"]))
+            return lista_dados
+        except FileNotFoundError:
+            return []
 def criar_produto_seguro(nome, valor):
     try:
         valor_convertido = float(valor)
     except ValueError:
-        print("Valor inválido para produto")
+        raise ValorInvalidoError("Valor inválido para produto")
         return None
     return Produto(nome, valor_convertido)
 

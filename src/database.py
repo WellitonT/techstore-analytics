@@ -1,5 +1,5 @@
 import sqlite3
-from src.json_storage import carregar_catalogo
+from src.json_storage import JsonStorage
 from src.logger import registrar_log
 
 
