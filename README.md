@@ -1,49 +1,87 @@
 # TechStore Analytics
 
-Projeto de estudos aplicado, construído ao longo da minha trilha de carreira em tecnologia: **Data Engineering → Machine Learning → AI Engineering**.
+Sistema de gestão de catálogo de produtos e pedidos para um e-commerce fictício, construído como projeto de estudo e portfólio em Engenharia de Dados, com foco em fundamentos sólidos de Python orientado a objetos e boas práticas de engenharia de software.
 
 ## Sobre o projeto
 
-O TechStore Analytics é um sistema fictício de gestão de catálogo de produtos de e-commerce, usado como projeto contínuo para aplicar, na prática, cada conceito estudado ao longo da trilha. Em vez de exercícios isolados e descartáveis, cada fase da minha jornada de aprendizado adiciona uma nova camada a este mesmo sistema — simulando como conhecimentos se acumulam em um projeto de engenharia real.
+Este projeto nasceu como terreno de prática para consolidar Programação Orientada a Objetos aplicada a um domínio real (e-commerce), evoluindo de exercícios isolados para uma arquitetura de software completa: herança e polimorfismo, encapsulamento, métodos mágicos, abstração e inversão de dependência, exceções customizadas, e testes automatizados.
 
-**Evolução do projeto até agora:**
-- ✅ **Fase 0 — Fundamentos de Python:** classes (POO), tratamento de erros (`try/except`), persistência em arquivos JSON
-- ✅ **Git/GitHub:** versionamento de todo o código
-- 🔄 **Fase 1 — SQL e Bancos de Dados (em andamento):** migração do catálogo de JSON para SQLite, consultas com `SELECT`, `WHERE`, `ORDER BY`
-- ⏳ **Próximas fases:** Big Data, Cloud, Machine Learning, Deep Learning, Engenharia de IA/LLMs, MLOps
+Cada decisão de design documentada abaixo foi tomada de forma deliberada, com trade-offs avaliados — não copiada de tutorial.
 
-## Tecnologias utilizadas
+## Funcionalidades
 
-- **Python 3** — linguagem principal
-- **SQLite** — banco de dados relacional (via módulo `sqlite3` da biblioteca padrão)
-- **JSON** — persistência inicial de dados (Fase 0)
-- **Git/GitHub** — controle de versão
+- Cadastro de produtos físicos e digitais, com cálculo de imposto e frete específicos por tipo
+- Aplicação de descontos com validação
+- Persistência em múltiplos formatos (JSON e CSV), intercambiáveis sem alterar o código consumidor
+- Hierarquia de exceções customizadas para erros de negócio
+- Testes automatizados cobrindo os principais fluxos
 
-## Estrutura do repositório
+## Arquitetura
 
 ```
 techstore-analytics/
-├── claude_estudos/       # Implementação principal do TechStore
-│   ├── techstore.py      # Classe Produto, CRUD em JSON
-│   └── techstore_sql.py  # Migração e integração com SQLite
-├── chat_estudos/         # Exercícios de fixação por tópico
-│   ├── funcoes.py
-│   ├── poo.py
-│   ├── poo_carrinho_compras.py
-│   └── try_except.py
-└── README.md
+├── src/
+│   ├── __init__.py
+│   ├── models.py              # Produto, ProdutoFisico, ProdutoDigital, Pedido
+│   ├── storage_interface.py   # Contrato abstrato (ABC) para persistência
+│   ├── json_storage.py        # Implementação concreta: JSON
+│   ├── csv_storage.py         # Implementação concreta: CSV
+│   ├── database.py
+│   ├── exceptions.py          # Hierarquia de exceções customizadas
+│   └── logger.py
+├── data/                      # Dados gerados em execução (ignorados no git)
+├── tests/
+│   └── test_models.py
+├── main.py
+├── requirements.txt
+├── pytest.ini
+└── .gitignore
 ```
 
-## Principais conceitos aplicados
+## Decisões de design
 
-- Programação Orientada a Objetos (classes, encapsulamento, métodos)
-- Tratamento de exceções e validação de dados de entrada
-- Serialização/desserialização de dados (JSON)
-- Modelagem de dados relacional (`CREATE TABLE`, tipos, `PRIMARY KEY`, `NOT NULL`)
-- Consultas SQL (`SELECT`, `WHERE`, `ORDER BY`)
-- Integração Python + SQL (`sqlite3`)
-- Boas práticas de engenharia: DRY (não duplicar lógica entre arquivos), guard clauses, tratamento defensivo de erros
+**Herança e polimorfismo.** `Produto` é a classe base, com `ProdutoFisico` e `ProdutoDigital` sobrescrevendo apenas o que realmente difere entre os dois tipos (`calcular_frete`, alíquota de imposto). Métodos que não fazem sentido para um dos tipos (frete para produto digital) não foram forçados na classe mãe com valores fictícios — em vez disso, `Produto` fornece uma implementação padrão neutra, evitando violar o Princípio de Substituição de Liskov.
 
-## Sobre mim
+**Encapsulamento.** O atributo `valor` é protegido por `@property`/`@setter`, validando a entrada na origem — inclusive na criação do objeto — em vez de espalhar validação redundante por cada método que usa o valor.
 
-Estou em transição de carreira para a área de tecnologia, com o objetivo de atuar como Engenheiro de Dados, evoluindo posteriormente para Machine Learning e Engenharia de IA. Este repositório documenta essa jornada de forma contínua e prática.
+**Abstração e inversão de dependência.** `StorageInterface`, uma classe abstrata (`ABC`), define o contrato que `JsonStorage` e `CsvStorage` implementam. O código que consome o storage não precisa saber qual implementação está por trás — trocar de JSON para um banco de dados real, no futuro, não exige alterar quem usa o storage.
+
+**Exceções customizadas.** Erros de negócio (`ValorInvalidoError`, `PercentualInvalidoError`) herdam de uma base comum (`TechstoreError`), permitindo capturar seletivamente um tipo específico ou qualquer erro de negócio do projeto de forma genérica, sem mascarar bugs reais de programação.
+
+## Como rodar o projeto
+
+```bash
+# Clonar o repositório
+git clone https://github.com/WellitonT/techstore-analytics.git
+cd techstore-analytics
+
+# Criar e ativar o ambiente virtual (PowerShell)
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+
+# Instalar dependências
+pip install -r requirements.txt
+
+# Rodar o projeto
+python main.py
+```
+
+## Rodando os testes
+
+```bash
+pytest tests/ -v
+```
+
+## Stack
+
+- Python 3.13
+- Biblioteca padrão (`dataclasses`, `datetime`, `uuid`, `json`, `csv`, `sqlite3`, `abc`) para toda a lógica de domínio
+- `pytest` para testes automatizados
+
+## Status
+
+Fundamentos de Programação Orientada a Objetos completos: herança, polimorfismo, encapsulamento, métodos mágicos, abstração, exceções customizadas. Próximas adições previstas: expansão da cobertura de testes automatizados para os módulos de storage.
+
+## Autor
+
+Welliton — projeto desenvolvido como parte de uma trilha autodidata em Engenharia de Dados, com trajetória planejada até Machine Learning e AI Engineering.
