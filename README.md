@@ -1,88 +1,57 @@
 # TechStore Analytics
 
-Sistema de gestão de catálogo de produtos e pedidos para um e-commerce fictício, construído como projeto de estudo e portfólio em Engenharia de Dados, com foco em fundamentos sólidos de Python orientado a objetos e boas práticas de engenharia de software.
+Projeto de fundamentos em Python, construído para praticar Programação Orientada a Objetos e engenharia de software em cima de um domínio concreto (uma loja de tecnologia), em vez de exercícios isolados. O projeto cresce a cada fase de estudo.
 
-## Sobre o projeto
+## O que o projeto demonstra
 
-Este projeto nasceu como terreno de prática para consolidar Programação Orientada a Objetos aplicada a um domínio real (e-commerce), evoluindo de exercícios isolados para uma arquitetura de software completa: herança e polimorfismo, encapsulamento, métodos mágicos, abstração e inversão de dependência, exceções customizadas, e testes automatizados.
+- **Modelagem com `dataclass`:** `datetime.date` e `uuid4` com `field(default_factory=...)`.
+- **Herança e polimorfismo:** alíquota definida no nível da classe e sobrescrita nas subclasses, com cálculo de frete.
+- **Encapsulamento:** validação via `@property` e `@setter`.
+- **Métodos especiais (dunder):** objetos ordenáveis com `sorted()` sem precisar de `key=`.
+- **Abstração e inversão de dependência:** `StorageInterface(ABC)` com implementações `JsonStorage` e `CsvStorage`, trocáveis sem mexer na regra de negócio.
+- **Exceções customizadas:** hierarquia `TechstoreError` → `ValorInvalidoError` e `PercentualInvalidoError`.
+- **Logging:** módulo próprio de log.
+- **Testes:** `pytest`.
 
-Cada decisão de design documentada abaixo foi tomada de forma deliberada, com trade-offs avaliados — não copiada de tutorial.
-
-## Funcionalidades
-
-- Cadastro de produtos físicos e digitais, com cálculo de imposto e frete específicos por tipo
-- Aplicação de descontos com validação
-- Persistência em múltiplos formatos (JSON e CSV), intercambiáveis sem alterar o código consumidor
-- Hierarquia de exceções customizadas para erros de negócio
-- Testes automatizados cobrindo os principais fluxos
-
-## Arquitetura
+## Estrutura
 
 ```
 techstore-analytics/
 ├── src/
-│   ├── __init__.py
-│   ├── models.py              # Produto, ProdutoFisico, ProdutoDigital, Pedido
-│   ├── storage_interface.py   # Contrato abstrato (ABC) para persistência
-│   ├── json_storage.py        # Implementação concreta: JSON
-│   ├── csv_storage.py         # Implementação concreta: CSV
-│   ├── database.py
-│   ├── exceptions.py          # Hierarquia de exceções customizadas
-│   └── logger.py
-├── data/                      # Dados gerados em execução (ignorados no git)
-├── tests/
-│   └── test_models.py
+│   ├── models.py          # Classes de domínio
+│   ├── json_storage.py    # Persistência em JSON
+│   ├── csv_storage.py     # Persistência em CSV
+│   ├── database.py        # Persistência em banco de dados
+│   └── logger.py          # Configuração de logging
+├── data/
 ├── main.py
-├── requirements.txt
-├── pytest.ini
-└── .gitignore
+└── pytest.ini
 ```
 
-## Decisões de design
+## Como rodar
 
-**Herança e polimorfismo.** `Produto` é a classe base, com `ProdutoFisico` e `ProdutoDigital` sobrescrevendo apenas o que realmente difere entre os dois tipos (`calcular_frete`, alíquota de imposto). Métodos que não fazem sentido para um dos tipos (frete para produto digital) não foram forçados na classe mãe com valores fictícios — em vez disso, `Produto` fornece uma implementação padrão neutra, evitando violar o Princípio de Substituição de Liskov.
-
-**Encapsulamento.** O atributo `valor` é protegido por `@property`/`@setter`, validando a entrada na origem — inclusive na criação do objeto — em vez de espalhar validação redundante por cada método que usa o valor.
-
-**Abstração e inversão de dependência.** `StorageInterface`, uma classe abstrata (`ABC`), define o contrato que `JsonStorage` e `CsvStorage` implementam. O código que consome o storage não precisa saber qual implementação está por trás — trocar de JSON para um banco de dados real, no futuro, não exige alterar quem usa o storage.
-
-**Exceções customizadas.** Erros de negócio (`ValorInvalidoError`, `PercentualInvalidoError`) herdam de uma base comum (`TechstoreError`), permitindo capturar seletivamente um tipo específico ou qualquer erro de negócio do projeto de forma genérica, sem mascarar bugs reais de programação.
-
-## Como rodar o projeto
-
-```bash
-# Clonar o repositório
+```powershell
 git clone https://github.com/WellitonT/techstore-analytics.git
 cd techstore-analytics
 
-# Criar e ativar o ambiente virtual (PowerShell)
 python -m venv venv
 .\venv\Scripts\Activate.ps1
 
-# Instalar dependências
-pip install -r requirements.txt
-
-# Rodar o projeto
 python main.py
 ```
 
-## Rodando os testes
+## Testes
 
-```bash
-pytest tests/ -v
+```powershell
+python -m pytest
 ```
-
-## Stack
-
-- Python 3.13
-- Biblioteca padrão (`dataclasses`, `datetime`, `uuid`, `json`, `csv`, `sqlite3`, `abc`) para toda a lógica de domínio
-- `pytest` para testes automatizados
 
 ## Status
 
-Fundamentos de Programação Orientada a Objetos completos: herança, polimorfismo, encapsulamento, métodos mágicos, abstração, exceções customizadas. Próximas adições previstas: expansão da cobertura de testes automatizados para os módulos de storage.
+**Concluído:** modelagem orientada a objetos (herança, polimorfismo, encapsulamento, abstração), persistência em múltiplos formatos, hierarquia de exceções e logging.
+
+**Papel no portfólio:** este é o projeto de fundamentos. A aplicação de engenharia de dados em pipeline está no [NBA Data Warehouse](https://github.com/WellitonT/nba-data-warehouse).
 
 ## Autor
 
-Welliton — projeto desenvolvido como parte de uma trilha autodidata em Engenharia de Dados, com trajetória planejada até Machine Learning e AI Engineering.
-
+Welliton ([LinkedIn](https://www.linkedin.com/in/welliton-tiene-336bb7207/)) · trilha autodidata em dados, rumo a MLOps.
